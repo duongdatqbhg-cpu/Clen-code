@@ -344,54 +344,195 @@ public class BadSchoolProgram {
 
             } else if (menu == 3) {
                 // Quản lý môn học (copy-paste nữa)
-                int cmenu = 0;
-                while (cmenu != 9) {
-                    System.out.println("--- QUAN LY MON HOC ---");
-                    System.out.println("1. Them MH");
-                    System.out.println("2. Xoa MH");
-                    System.out.println("3. Cap nhat MH");
-                    System.out.println("4. Hien thi MH");
-                    System.out.println("9. Quay lai");
-                    cmenu = sc.nextInt(); sc.nextLine();
-                    if (cmenu == 1) {
-                        System.out.print("Nhap id MH: ");
-                        String id = sc.nextLine();
-                        System.out.print("Nhap ten MH: ");
-                        String name = sc.nextLine();
-                        System.out.print("Nhap so tin chi: ");
-                        int tc = sc.nextInt(); sc.nextLine();
-                        courses.add(id + "|" + name + "|" + tc);
-                    } else if (cmenu == 2) {
-                        System.out.print("Nhap id MH can xoa: ");
-                        String id = sc.nextLine();
-                        for (int i = 0; i < courses.size(); i++) {
-                            String[] p = courses.get(i).split("\\|");
-                            if (p[0].equals(id)) {
-                                courses.remove(i);
-                                break;
-                            }
-                        }
-                    } else if (cmenu == 3) {
-                        System.out.print("Nhap id MH cap nhat: ");
-                        String id = sc.nextLine();
-                        for (int i = 0; i < courses.size(); i++) {
-                            String[] p = courses.get(i).split("\\|");
-                            if (p[0].equals(id)) {
-                                System.out.print("Nhap ten moi: ");
-                                String name = sc.nextLine();
-                                System.out.print("Nhap tin chi moi: ");
-                                int tc = sc.nextInt(); sc.nextLine();
-                                courses.set(i, id + "|" + name + "|" + tc);
-                            }
-                        }
-                    } else if (cmenu == 4) {
-                        for (int i = 0; i < courses.size(); i++) {
-                            String[] p = courses.get(i).split("\\|");
-                            System.out.println("ID:" + p[0] + " Name:" + p[1] + " TinChi:" + p[2]);
-                        }
-                    }
-                }
+               class Course {
+    private String id;
+    private String name;
+    private int credits;
+
+    public Course(String id, String name, int credits) {
+        this.id = id;
+        this.name = name;
+        this.credits = credits;
+    }
+
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public int getCredits() { return credits; }
+
+    public void setName(String name) { this.name = name; }
+    public void setCredits(int credits) { this.credits = credits; }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Name: " + name + " | Credits: " + credits;
+    }
+}
+
+// ====== Repository Interface ======
+interface CourseRepository {
+    void add(Course course);
+    void remove(String id);
+    Course findById(String id);
+    List<Course> findAll();
+}
+
+// ====== Repository Implementation (in-memory) ======
+class InMemoryCourseRepository implements CourseRepository {
+    private List<Course> courses = new ArrayList<>();
+
+    @Override
+    public void add(Course course) {
+        courses.add(course);
+    }
+
+    @Override
+    public void remove(String id) {
+        courses.removeIf(c -> c.getId().equals(id));
+    }
+
+    @Override
+    public Course findById(String id) {
+        return courses.stream()
+                      .filter(c -> c.getId().equals(id))
+                      .findFirst()
+                      .orElse(null);
+    }
+
+    @Override
+    public List<Course> findAll() {
+        return courses;
+    }
+}
+
+// ====== Service Layer ======
+class CourseService {
+    private final CourseRepository repository;
+
+    public CourseService(CourseRepository repository) {
+        this.repository = repository;
+    }
+
+    public void addCourse(String id, String name, int credits) {
+        repository.add(new Course(id, name, credits));
+    }
+
+    public boolean updateCourse(String id, String newName, int newCredits) {
+        Course c = repository.findById(id);
+        if (c != null) {
+            c.setName(newName);
+            c.setCredits(newCredits);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeCourse(String id) {
+        Course c = repository.findById(id);
+        if (c != null) {
+            repository.remove(id);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Course> listCourses() {
+        return repository.findAll();
+    }
+}
+
+// ====== UI Layer ======
+class CourseMenu {
+    private final Scanner sc = new Scanner(System.in);
+    private final CourseService service;
+
+    public CourseMenu(CourseService service) {
+        this.service = service;
+    }
+
+    public void show() {
+        int choice = 0;
+        while (choice != 9) {
+            System.out.println("\n--- QUAN LY MON HOC ---");
+            System.out.println("1. Them MH");
+            System.out.println("2. Xoa MH");
+            System.out.println("3. Cap nhat MH");
+            System.out.println("4. Hien thi MH");
+            System.out.println("9. Quay lai");
+            System.out.print("Lua chon: ");
+
+            try {
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (Exception e) {
+                System.out.println("Nhap so!");
+                continue;
             }
+
+            switch (choice) {
+                case 1 -> addCourseUI();
+                case 2 -> removeCourseUI();
+                case 3 -> updateCourseUI();
+                case 4 -> listCoursesUI();
+                case 9 -> System.out.println("Quay lai...");
+                default -> System.out.println("Lua chon khong hop le.");
+            }
+        }
+    }
+
+    private void addCourseUI() {
+        System.out.print("Nhap id MH: ");
+        String id = sc.nextLine();
+        System.out.print("Nhap ten MH: ");
+        String name = sc.nextLine();
+        System.out.print("Nhap so tin chi: ");
+        int credits = readIntSafe();
+        service.addCourse(id, name, credits);
+        System.out.println("Da them mon hoc.");
+    }
+
+    private void removeCourseUI() {
+        System.out.print("Nhap id MH can xoa: ");
+        String id = sc.nextLine();
+        if (service.removeCourse(id))
+            System.out.println("Da xoa mon hoc.");
+        else
+            System.out.println("Khong tim thay MH.");
+    }
+
+    private void updateCourseUI() {
+        System.out.print("Nhap id MH cap nhat: ");
+        String id = sc.nextLine();
+        System.out.print("Nhap ten moi: ");
+        String name = sc.nextLine();
+        System.out.print("Nhap tin chi moi: ");
+        int credits = readIntSafe();
+        if (service.updateCourse(id, name, credits))
+            System.out.println("Da cap nhat MH.");
+        else
+            System.out.println("Khong tim thay MH.");
+    }
+
+    private void listCoursesUI() {
+        service.listCourses().forEach(System.out::println);
+    }
+
+    private int readIntSafe() {
+        try {
+            return Integer.parseInt(sc.nextLine());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+}
+
+// ====== Main App ======
+public class CleanCourseApp {
+    public static void main(String[] args) {
+        CourseRepository repo = new InMemoryCourseRepository();
+        CourseService service = new CourseService(repo);
+        CourseMenu menu = new CourseMenu(service);
+        menu.show();
+    }
+}
 
             else if (menu == 4) {
                 int emenu = 0;
