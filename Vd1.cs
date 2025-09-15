@@ -260,7 +260,210 @@ public class GoodSchoolProgram {
         }
     }
     
+        // ========================== SUB MENUS ==========================
 
+    private static void studentMenu(Scanner sc) {
+        int smenu = 0;
+        while (smenu != 9) {
+            System.out.println("--- QUAN LY SINH VIEN ---");
+            System.out.println("1. Them SV");
+            System.out.println("2. Xoa SV");
+            System.out.println("3. Cap nhat SV");
+            System.out.println("4. Hien thi tat ca SV");
+            System.out.println("5. Tim SV theo ten");
+            System.out.println("6. Tim SV GPA > 8");
+            System.out.println("7. Sap xep theo ten");
+            System.out.println("8. Sap xep theo GPA");
+            System.out.println("9. Quay lai");
+            smenu = sc.nextInt(); sc.nextLine();
 
+            switch (smenu) {
+                case 1 -> {
+                    System.out.print("Nhap id: "); String id = sc.nextLine();
+                    System.out.print("Nhap ten: "); String name = sc.nextLine();
+                    System.out.print("Nhap tuoi: "); int age = sc.nextInt(); sc.nextLine();
+                    System.out.print("Nhap GPA: "); double gpa = sc.nextDouble(); sc.nextLine();
+                    students.add(new Student(id, name, age, gpa));
+                }
+                case 2 -> {
+                    System.out.print("Nhap id can xoa: "); String id = sc.nextLine();
+                    students.removeIf(s -> s.getId().equals(id));
+                }
+                case 3 -> {
+                    System.out.print("Nhap id can cap nhat: "); String id = sc.nextLine();
+                    for (Student s : students) {
+                        if (s.getId().equals(id)) {
+                            System.out.print("Nhap ten moi: "); s.setName(sc.nextLine());
+                            System.out.print("Nhap tuoi moi: "); s.setAge(sc.nextInt()); sc.nextLine();
+                            System.out.print("Nhap GPA moi: "); s.setGpa(sc.nextDouble()); sc.nextLine();
+                        }
+                    }
+                }
+                case 4 -> students.forEach(System.out::println);
+                case 5 -> {
+                    System.out.print("Nhap ten: "); String name = sc.nextLine();
+                    students.stream().filter(s -> s.getName().equals(name)).forEach(System.out::println);
+                }
+                case 6 -> students.stream().filter(s -> s.getGpa() > 8).forEach(System.out::println);
+                case 7 -> {
+                    students.sort(Comparator.comparing(Student::getName));
+                    System.out.println("Da sap xep theo ten.");
+                }
+                case 8 -> {
+                    students.sort(Comparator.comparing(Student::getGpa).reversed());
+                    System.out.println("Da sap xep theo GPA.");
+                }
+            }
+        }
+    }
 
+    private static void teacherMenu(Scanner sc) {
+        int tmenu = 0;
+        while (tmenu != 9) {
+            System.out.println("--- QUAN LY GIAO VIEN ---");
+            System.out.println("1. Them GV");
+            System.out.println("2. Xoa GV");
+            System.out.println("3. Cap nhat GV");
+            System.out.println("4. Hien thi GV");
+            System.out.println("9. Quay lai");
+            tmenu = sc.nextInt(); sc.nextLine();
+
+            switch (tmenu) {
+                case 1 -> {
+                    System.out.print("Nhap id GV: "); String id = sc.nextLine();
+                    System.out.print("Nhap ten GV: "); String name = sc.nextLine();
+                    System.out.print("Nhap chuyen mon: "); String major = sc.nextLine();
+                    teachers.add(new Teacher(id, name, major));
+                }
+                case 2 -> {
+                    System.out.print("Nhap id GV can xoa: "); String id = sc.nextLine();
+                    teachers.removeIf(t -> t.getId().equals(id));
+                }
+                case 3 -> {
+                    System.out.print("Nhap id GV cap nhat: "); String id = sc.nextLine();
+                    for (Teacher t : teachers) {
+                        if (t.getId().equals(id)) {
+                            System.out.print("Nhap ten moi: "); t.setName(sc.nextLine());
+                            System.out.print("Nhap chuyen mon moi: "); t.setMajor(sc.nextLine());
+                        }
+                    }
+                }
+                case 4 -> teachers.forEach(System.out::println);
+            }
+        }
+    }
+
+    private static void courseMenu(Scanner sc) {
+        int cmenu = 0;
+        while (cmenu != 9) {
+            System.out.println("--- QUAN LY MON HOC ---");
+            System.out.println("1. Them MH");
+            System.out.println("2. Xoa MH");
+            System.out.println("3. Cap nhat MH");
+            System.out.println("4. Hien thi MH");
+            System.out.println("9. Quay lai");
+            cmenu = sc.nextInt(); sc.nextLine();
+
+            switch (cmenu) {
+                case 1 -> {
+                    System.out.print("Nhap id MH: "); String id = sc.nextLine();
+                    System.out.print("Nhap ten MH: "); String name = sc.nextLine();
+                    System.out.print("Nhap so tin chi: "); int tc = sc.nextInt(); sc.nextLine();
+                    courses.add(new Course(id, name, tc));
+                }
+                case 2 -> {
+                    System.out.print("Nhap id MH can xoa: "); String id = sc.nextLine();
+                    courses.removeIf(c -> c.getId().equals(id));
+                }
+                case 3 -> {
+                    System.out.print("Nhap id MH cap nhat: "); String id = sc.nextLine();
+                    for (Course c : courses) {
+                        if (c.getId().equals(id)) {
+                            System.out.print("Nhap ten moi: "); c.setName(sc.nextLine());
+                            System.out.print("Nhap tin chi moi: "); c.setCredits(sc.nextInt()); sc.nextLine();
+                        }
+                    }
+                }
+                case 4 -> courses.forEach(System.out::println);
+            }
+        }
+    }
+
+    private static void enrollmentMenu(Scanner sc) {
+        int emenu = 0;
+        while (emenu != 9) {
+            System.out.println("--- QUAN LY DANG KY HOC ---");
+            System.out.println("1. Dang ky mon hoc");
+            System.out.println("2. Huy dang ky");
+            System.out.println("3. Xem tat ca dang ky");
+            System.out.println("9. Quay lai");
+            emenu = sc.nextInt(); sc.nextLine();
+
+            switch (emenu) {
+                case 1 -> {
+                    System.out.print("Nhap id SV: "); String sid = sc.nextLine();
+                    System.out.print("Nhap id MH: "); String cid = sc.nextLine();
+                    enrollments.add(new Enrollment(sid, cid));
+                }
+                case 2 -> {
+                    System.out.print("Nhap id SV: "); String sid = sc.nextLine();
+                    System.out.print("Nhap id MH: "); String cid = sc.nextLine();
+                    enrollments.removeIf(e -> e.getStudentId().equals(sid) && e.getCourseId().equals(cid));
+                }
+                case 3 -> enrollments.forEach(System.out::println);
+            }
+        }
+    }
+
+    private static void gradeMenu(Scanner sc) {
+        int gmenu = 0;
+        while (gmenu != 9) {
+            System.out.println("--- QUAN LY DIEM ---");
+            System.out.println("1. Nhap diem");
+            System.out.println("2. Cap nhat diem");
+            System.out.println("3. Hien thi diem");
+            System.out.println("9. Quay lai");
+            gmenu = sc.nextInt(); sc.nextLine();
+
+            switch (gmenu) {
+                case 1 -> {
+                    System.out.print("Nhap id SV: "); String sid = sc.nextLine();
+                    System.out.print("Nhap id MH: "); String cid = sc.nextLine();
+                    System.out.print("Nhap diem: "); double d = sc.nextDouble(); sc.nextLine();
+                    grades.add(new Grade(sid, cid, d));
+                }
+                case 2 -> {
+                    System.out.print("Nhap id SV: "); String sid = sc.nextLine();
+                    System.out.print("Nhap id MH: "); String cid = sc.nextLine();
+                    for (Grade g : grades) {
+                        if (g.getStudentId().equals(sid) && g.getCourseId().equals(cid)) {
+                            System.out.print("Nhap diem moi: "); g.setScore(sc.nextDouble()); sc.nextLine();
+                        }
+                    }
+                }
+                case 3 -> grades.forEach(System.out::println);
+            }
+        }
+    }
+
+    private static void reportMenu() {
+        System.out.println("=== BAO CAO ===");
+        for (Student s : students) {
+            System.out.println("Sinh vien: " + s.getName());
+            for (Enrollment e : enrollments) {
+                if (e.getStudentId().equals(s.getId())) {
+                    for (Course c : courses) {
+                        if (c.getId().equals(e.getCourseId())) {
+                            System.out.print(" - Mon hoc: " + c.getName());
+                            grades.stream()
+                                  .filter(g->g.getStudentId().equals(s.getId()) && g.getCourseId().equals(c.getId()))
+                                  .forEach(g->System.out.print(" | Diem: " + g.getScore()));
+                            System.out.println();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 }
