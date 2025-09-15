@@ -46,15 +46,16 @@ public class Student {
 
 
 public class BadSchoolProgram {
+        // ❌ Lỗi: Trước để tất cả logic trong main() => God Method
+    // ✅ Sửa: Tách dữ liệu thành List<Entity>
+    private static List<Student> students = new ArrayList<>();
+    private static List<Teacher> teachers = new ArrayList<>();
+    private static List<Course> courses = new ArrayList<>();
+    private static List<Enrollment> enrollments = new ArrayList<>();
+    private static List<Grade> grades = new ArrayList<>();
+    
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        // Danh sách dữ liệu: lưu sinh viên, giáo viên, môn học, đăng ký, điểm...
-        ArrayList<String> students = new ArrayList<String>();
-        ArrayList<String> teachers = new ArrayList<String>();
-        ArrayList<String> courses = new ArrayList<String>();
-        ArrayList<String> enrollments = new ArrayList<String>();
-        ArrayList<String> grades = new ArrayList<String>();
 
         int menu = 0;
         while (menu != 99) {
@@ -68,6 +69,15 @@ public class BadSchoolProgram {
             System.out.println("99. Thoat");
             System.out.print("Nhap lua chon: ");
             menu = sc.nextInt(); sc.nextLine();
+
+            switch (menu) {
+                case 1->studentMenu(sc);
+                case 2->teacherMenu(sc);
+                case 3->courseMenu(sc);
+                case 4->enrollmentMenu(sc);
+                case 5->gradeMenu(sc);
+                case 6->reportMenu();
+            }
 
             if (menu == 1) {
                 // Quản lý sinh viên
