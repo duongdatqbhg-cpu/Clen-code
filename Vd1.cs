@@ -44,6 +44,37 @@ public class Student {
     }
 }
 
+// ✅ Thêm class Teacher để thay thế việc dùng String "id|name|major"
+class Teacher {
+    private String id;
+    private String name;
+    private String major;
+
+    public Teacher(String id, String name, String major) {
+        this.id = id;
+        this.name = name;
+        this.major = major;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    @Override
+    public String toString() {
+        return "ID:" + id + " Name:" + name + " Major:" + major;
+    }
+}
+
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
