@@ -183,7 +183,7 @@ class CourseMenu {
     }
 
     public void show() {
-        int choice = 0;
+        int choice = 1000;
         while (choice != 9) {
             System.out.println("\n--- QUAN LY MON HOC ---");
             System.out.println("1. Them MH");
