@@ -75,8 +75,6 @@ class Teacher {
 }
 
 
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class EnrollmentManager {
     private ArrayList<String> enrollments;
