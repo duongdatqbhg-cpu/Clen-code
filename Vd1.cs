@@ -78,44 +78,108 @@ class Teacher {
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+// dã sửa bởi cong do 
 public class EnrollmentManager {
-    private ArrayList<String> enrollments;
-    private Scanner sc;
+    private final ArrayList<String> enrollments;
+    private final Scanner scanner;
 
-    public EnrollmentManager(ArrayList<String> enrollments, Scanner sc) {
+    // Định nghĩa các lựa chọn menu dưới dạng hằng số
+    private static final int ADD = 1;
+    private static final int REMOVE = 2;
+    private static final int LIST = 3;
+    private static final int BACK = 9;
+
+    public EnrollmentManager(ArrayList<String> enrollments, Scanner scanner) {
         this.enrollments = enrollments;
-        this.sc = sc;
+        this.scanner = scanner;
     }
 
     public void menu() {
-        int emenu = 0;
-        while (emenu != 9) {
-            System.out.println("--- QUAN LY DANG KY HOC ---");
-            System.out.println("1. Dang ky mon hoc");
-            System.out.println("2. Huy dang ky");
-            System.out.println("3. Xem tat ca dang ky");
-            System.out.println("9. Quay lai");
-            System.out.print("Nhap lua chon: ");
-            emenu = sc.nextInt(); sc.nextLine();
+        while (true) {
+            printMenu();
+            int choice = getUserChoice();
 
-            switch (emenu) {
-                case 1:
+            switch (choice) {
+                case ADD:
                     addEnrollment();
                     break;
-                case 2:
+                case REMOVE:
                     removeEnrollment();
                     break;
-                case 3:
+                case LIST:
                     listEnrollments();
                     break;
-                case 9:
+                case BACK:
                     System.out.println("Quay lai menu chinh...");
-                    break;
+                    return; // Thoát khỏi vòng lặp menu
                 default:
                     System.out.println("Lua chon khong hop le!");
             }
         }
     }
+
+    private void printMenu() {
+        System.out.println("--- QUAN LY DANG KY HOC ---");
+        System.out.println("1. Dang ky mon hoc");
+        System.out.println("2. Huy dang ky");
+        System.out.println("3. Xem tat ca dang ky");
+        System.out.println("9. Quay lai");
+        System.out.print("Nhap lua chon: ");
+    }
+
+    private int getUserChoice() {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Vui long nhap so!");
+            scanner.next(); // bỏ input không hợp lệ
+            System.out.print("Nhap lua chon: ");
+        }
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // clear buffer
+        return choice;
+    }
+
+    private void addEnrollment() {
+        System.out.print("Nhap id SV: ");
+        String studentId = scanner.nextLine();
+        System.out.print("Nhap id MH: ");
+        String courseId = scanner.nextLine();
+        enrollments.add(studentId + "|" + courseId);
+        System.out.println("Dang ky thanh cong!");
+    }
+
+    private void removeEnrollment() {
+        System.out.print("Nhap id SV: ");
+        String studentId = scanner.nextLine();
+        System.out.print("Nhap id MH: ");
+        String courseId = scanner.nextLine();
+
+        boolean removed = enrollments.removeIf(e -> {
+            String[] parts = e.split("\\|");
+            return parts[0].equals(studentId) && parts[1].equals(courseId);
+        });
+
+        if (removed) {
+            System.out.println("Da huy dang ky.");
+        } else {
+            System.out.println("Khong tim thay dang ky.");
+        }
+    }
+
+    private void listEnrollments() {
+        if (enrollments.isEmpty()) {
+            System.out.println("Chua co dang ky nao.");
+            return;
+        }
+        System.out.println("Danh sach dang ky:");
+        for (String e : enrollments) {
+            String[] parts = e.split("\\|");
+            System.out.println("SV: " + parts[0] + " -> MH: " + parts[1]);
+        }
+    }
+}
+
 
     private void addEnrollment() {
         System.out.print("Nhap id SV: ");
