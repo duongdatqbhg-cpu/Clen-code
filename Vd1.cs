@@ -44,6 +44,90 @@ public class Student {
     }
 }
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class EnrollmentManager {
+    private ArrayList<String> enrollments;
+    private Scanner sc;
+
+    public EnrollmentManager(ArrayList<String> enrollments, Scanner sc) {
+        this.enrollments = enrollments;
+        this.sc = sc;
+    }
+
+    public void menu() {
+        int emenu = 0;
+        while (emenu != 9) {
+            System.out.println("--- QUAN LY DANG KY HOC ---");
+            System.out.println("1. Dang ky mon hoc");
+            System.out.println("2. Huy dang ky");
+            System.out.println("3. Xem tat ca dang ky");
+            System.out.println("9. Quay lai");
+            System.out.print("Nhap lua chon: ");
+            emenu = sc.nextInt(); sc.nextLine();
+
+            switch (emenu) {
+                case 1:
+                    addEnrollment();
+                    break;
+                case 2:
+                    removeEnrollment();
+                    break;
+                case 3:
+                    listEnrollments();
+                    break;
+                case 9:
+                    System.out.println("Quay lai menu chinh...");
+                    break;
+                default:
+                    System.out.println("Lua chon khong hop le!");
+            }
+        }
+    }
+
+    private void addEnrollment() {
+        System.out.print("Nhap id SV: ");
+        String sid = sc.nextLine();
+        System.out.print("Nhap id MH: ");
+        String cid = sc.nextLine();
+        enrollments.add(sid + "|" + cid);
+        System.out.println("Đã đăng ký thành công!");
+    }
+
+    private void removeEnrollment() {
+        System.out.print("Nhap id SV: ");
+        String sid = sc.nextLine();
+        System.out.print("Nhap id MH: ");
+        String cid = sc.nextLine();
+
+        boolean removed = false;
+        for (int i = 0; i < enrollments.size(); i++) {
+            String[] p = enrollments.get(i).split("\\|");
+            if (p[0].equals(sid) && p[1].equals(cid)) {
+                enrollments.remove(i);
+                removed = true;
+                break;
+            }
+        }
+        if (removed) {
+            System.out.println("Huy dang ky thanh cong!");
+        } else {
+            System.out.println("Khong tim thay dang ky nay.");
+        }
+    }
+
+    private void listEnrollments() {
+        if (enrollments.isEmpty()) {
+            System.out.println("Chua co dang ky nao.");
+            return;
+        }
+        for (String e : enrollments) {
+            String[] p = e.split("\\|");
+            System.out.println("SV: " + p[0] + " dang ky MH: " + p[1]);
+        }
+    }
+}
 
 public class BadSchoolProgram {
     public static void main(String[] args) {
