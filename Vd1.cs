@@ -224,7 +224,7 @@ public class EnrollmentManager {
     }
 }
 
-public class BadSchoolProgram {
+public class GoodSchoolProgram {
     // ❌ Lỗi: Trước để tất cả logic trong main() => God Method
     // ✅ Sửa: Tách dữ liệu thành List<Entity>
     private static List<Student> students = new ArrayList<>();
@@ -260,7 +260,7 @@ public class BadSchoolProgram {
         }
     }
     
-    
+
 
 
 }
