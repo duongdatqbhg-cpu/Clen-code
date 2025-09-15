@@ -4,6 +4,47 @@
 
 import java.util.*;
 
+// ❌ LỖI: Trước dùng ArrayList<String> lưu "id|name|age|gpa"
+//        => Magic string / Stringly-typed data / Primitive Obsession
+// ✅ SỬA: Tạo class Student với thuộc tính, getter/setter, toString
+//        => Encapsulation, rõ ràng, dễ bảo trì, tránh lỗi split chuỗi
+
+public class Student {
+    // Thuộc tính (Encapsulation)
+    private String id;
+    private String name;
+    private int age;
+    private double gpa;
+
+    // ✅ Constructor: tạo Student từ dữ liệu chuẩn
+    public Student(String id, String name, int age, double gpa) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gpa = gpa;
+    }
+
+    // ✅ Getter/Setter: thay vì thao tác string thủ công
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
+
+    public double getGpa() { return gpa; }
+    public void setGpa(double gpa) { this.gpa = gpa; }
+
+    // ✅ Override toString: thay cho ghép chuỗi "id|name|..."
+    @Override
+    public String toString() {
+        return "ID:" + id + " | Name:" + name + " | Age:" + age + " | GPA:" + gpa;
+    }
+}
+
+
 public class BadSchoolProgram {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
